@@ -6,8 +6,12 @@ import com.barrositcompany.algasenrors.tempature.monitoring.domain.model.SensorM
 import com.barrositcompany.algasenrors.tempature.monitoring.domain.repository.SensorMonitoringRepository;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/sensors/{sensorId}/monitoring")
@@ -44,14 +48,22 @@ public class SensorMonitoringController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enable(@PathVariable TSID sensorId) {
         SensorMonitoring sensorMonitoring = findByIdOrDefault(sensorId);
+        if(sensorMonitoring.getEnabled()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sensor monitoring is already enabled");
+        }
+
         sensorMonitoring.setEnabled(true);
         sensorMonitoringRepository.save(sensorMonitoring);
     }
 
     @DeleteMapping("/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SneakyThrows
     public void disable(@PathVariable TSID sensorId) {
         SensorMonitoring sensorMonitoring = findByIdOrDefault(sensorId);
+        if(!sensorMonitoring.getEnabled()) {
+            Thread.sleep(Duration.ofSeconds(10));
+        }
         sensorMonitoring.setEnabled(false);
         sensorMonitoringRepository.save(sensorMonitoring);
     }
