@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Builder
 @Data
-public class TemperatureLogOutputDTO {
+public class TemperatureLogDataDTO {
 
     private UUID id;
     private TSID sensorId;

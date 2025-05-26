@@ -1,6 +1,6 @@
 package com.barrositcompany.algasenrors.tempature.monitoring.api.controller;
 
-import com.barrositcompany.algasenrors.tempature.monitoring.api.model.TemperatureLogOutputDTO;
+import com.barrositcompany.algasenrors.tempature.monitoring.api.model.TemperatureLogDataDTO;
 import com.barrositcompany.algasenrors.tempature.monitoring.domain.model.SensorId;
 import com.barrositcompany.algasenrors.tempature.monitoring.domain.repository.TemperratureLogRepository;
 import io.hypersistence.tsid.TSID;
@@ -21,9 +21,9 @@ public class TemperatureLogController {
     private final TemperratureLogRepository temperratureLogRepository;
 
     @GetMapping
-    public Page<TemperatureLogOutputDTO> search(@PathVariable TSID sensorId, @PageableDefault Pageable pageable) {
+    public Page<TemperatureLogDataDTO> search(@PathVariable TSID sensorId, @PageableDefault Pageable pageable) {
         return temperratureLogRepository.findAllBySensorId(new SensorId(sensorId), pageable)
-                .map(log -> TemperatureLogOutputDTO.builder()
+                .map(log -> TemperatureLogDataDTO.builder()
                         .id(log.getId().getValue())
                         .sensorId(log.getSensorId().getValue())
                         .registeredAt(log.getRegisteredAt())

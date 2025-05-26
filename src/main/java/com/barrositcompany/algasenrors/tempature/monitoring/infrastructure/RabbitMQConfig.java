@@ -13,7 +13,12 @@ public class RabbitMQConfig {
 
     public static final String FANOUT_EXCHANGE_NAME = "temperature-processing.temperature-received.v1.e";
 
+    public static final String QUEUE_NAME = "temperature-monitoring.process-temperature.v1.q";
 
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
+    }
 
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
@@ -22,7 +27,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue queue(){
-        return QueueBuilder.durable("temperature-monitoring.process-temperature.v1.q").build();
+        return QueueBuilder.durable(QUEUE_NAME).build();
     }
 
     public FanoutExchange exchange(){
